@@ -1,0 +1,80 @@
+/dts-v1/;
+
+#include "sm6115.dtsi"
+#include "pmi632.dtsi"
+
+/delete-node/ &pil_ipa_fw_mem;
+/delete-node/ &pil_ipa_gsi_mem;
+/delete-node/ &pil_gpu_mem;
+/delete-node/ &rmtfs_mem;
+
+/ {
+ 	model = "Xiaomi Poco M3";
+ 	compatible = "xiaomi,citrus", "qcom,sm6115";
+	chassis-type = "handset";
+
+	qcom,msm-id = <0x1bc 0>;
+	qcom,board-id = <34 0>;
+
+    chosen {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+        framebuffer@5c000000 {
+            compatible = "simple-framebuffer";
+            reg = <0x00 0x5c000000 0x00 (1080 * 2340 * 4)>;
+            width = <1080>;
+            height = <2340>;
+            stride = <(1080 * 4)>;
+            format = "a8r8g8b8";
+            clocks = <&gcc GCC_DISP_HF_AXI_CLK>;
+        };
+    };
+
+    reserved-memory {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+
+        pil_ipa_fw_mem: memory@0x55a00000 {
+            reg = <0x00 0x55a00000 0x00 0x10000>;
+            no-map;
+        };
+
+        pil_ipa_gsi_mem: memory@55a10000 {
+            reg = <0x00 0x55a10000 0x00 0x5000>;
+            no-map;
+        };
+
+        pil_gpu_mem: memory@55a15000 {
+            reg = <0x00 0x55a15000 0x00 0x2000>;
+            no-map;
+        };
+
+        framebuffer_region@5c000000 {
+			reg = <0x00 0x5c000000 0x00 0xf00000>;
+			no-map;
+		};
+
+        ramoops@64000000 {
+			compatible = "ramoops";
+			reg = <0x00 0x64000000 0x00 0x400000>;
+			console-size = <0x100000>;
+			record-size = <0x100000>;
+			pmsg-size = <0x200000>;
+		};
+
+        rmtfs_mem: memory@fa101000 {
+			compatible = "qcom,rmtfs-mem";
+			reg = <0 0xfa101000 0 0x200000>;
+			no-map;
+
+			qcom,client-id = <1>;
+			qcom,vmid = <15>;
+		};
+    };
+};
+
+&tlmm {
+    gpio-reserved-ranges = <0 4>, <14 4>;
+};
