@@ -17,6 +17,13 @@
 	qcom,msm-id = <0x1bc 0>;
 	qcom,board-id = <34 0>;
 
+	aliases {
+		serial0 = &uart3;
+		wifi0 = &wifi;
+		ufshc0 = &ufs_mem_hc;
+
+	};
+
     chosen {
         #address-cells = <2>;
         #size-cells = <2>;
@@ -222,35 +229,6 @@
 
 &tlmm {
     gpio-reserved-ranges = <0 4>, <14 4>;
-
-	qupv3_se4_2uart_sleep {
-		phandle = <0x144>;
-
-		mux {
-			pins = "gpio12\0gpio13";
-			function = "gpio";
-		};
-
-		config {
-			pins = "gpio12\0gpio13";
-			drive-strength = <0x02>;
-			bias-pull-down;
-		};
-	};
-	qupv3_se4_2uart_active {
-		phandle = <0x143>;
-
-		mux {
-			pins = "gpio12\0gpio13";
-			function = "qup4";
-		};
-
-		config {
-			pins = "gpio12\0gpio13";
-			drive-strength = <0x02>;
-			bias-disable;
-		};
-	};
 };
 
 &xo_board {
@@ -314,5 +292,9 @@ phy-names = "usb2-phy";
 };
 
 &uart3 {
+	status = "okay";
+};
+
+&pon_pwrkey {
 	status = "okay";
 };
